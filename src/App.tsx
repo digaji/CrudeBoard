@@ -1,24 +1,17 @@
-import React from 'react';
-import logo from './logo.svg';
+import { Route, Routes } from 'react-router-dom';
+import Home from './pages/Home';
 import './App.css';
 
-export default function App():JSX.Element {
+function App():JSX.Element {
   return (
-    <div className="text-center">
-      <header className="bg-[#282c34] min-h-screen flex flex-col items-center justify-center text-white text-3xl">
-        <img src={logo} className="h-[40vmin] animate-[spin_20s_linear_infinite] pointer-events-none" alt="logo" />
-        <p className="text-3xl">
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="underline text-sky-300"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Routes>
+      <Route path="/" element={
+        <div>
+          <Home />
+        </div>
+      } />
+    </Routes>
   );
 }
+
+export default App;
