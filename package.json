@@ -4,6 +4,7 @@
   "private": true,
   "homepage": ".",
   "dependencies": {
+    "@headlessui/react": "^1.6.1",
     "@testing-library/jest-dom": "^5.16.2",
     "@testing-library/react": "^12.1.4",
     "@testing-library/user-event": "^13.5.0",
@@ -43,9 +44,16 @@
       "last 1 safari version"
     ]
   },
+  "prettier": {
+    "printWidth": 160,
+    "semicolons": true
+  },
   "devDependencies": {
+    "@tailwindcss/forms": "^0.5.1",
     "autoprefixer": "^10.4.2",
     "postcss": "^8.4.8",
+    "prettier": "^2.6.2",
+    "prettier-plugin-tailwindcss": "^0.1.10",
     "tailwindcss": "^3.0.23"
   }
 }
