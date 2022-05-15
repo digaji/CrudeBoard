@@ -3,6 +3,7 @@ import Navbar from "./common/Navbar";
 import Home from "./pages/Home";
 import SignIn from "./pages/SignIn";
 import NotFound from "./pages/NotFound";
+import Register from "./pages/Register";
 import "./App.css";
 
 export default function App(): JSX.Element {
@@ -18,6 +19,12 @@ export default function App(): JSX.Element {
         <div className="min-h-screen bg-gradient-to-b from-crude-blue to-crude-darkBlue">
           <Navbar />
           <SignIn />
+        </div>
+      } />
+      <Route path="/register" element={
+        <div className="min-h-screen bg-gradient-to-b from-crude-blue to-crude-darkBlue">
+          <Navbar />
+          <Register />
         </div>
       } />
       <Route path="*" element={
