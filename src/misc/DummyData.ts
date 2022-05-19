@@ -15,11 +15,24 @@ const dummyData: data = {
     "column-1": {
       id: "column-1",
       title: "To Do",
+      colour: "bg-white",
       taskIds: ["task-1", "task-2", "task-3", "task-4"], // Saves order of tasks in the column
     },
+    "column-2": {
+      id: "column-2",
+      title: "In Progress",
+      colour: "bg-orange-200",
+      taskIds: [],
+    },
+    "column-3": {
+      id: "column-3",
+      title: "Completed",
+      colour: "bg-green-200",
+      taskIds: [],
+    }
   },
   // Order of the columns that will be presented
-  columnOrder: ["column-1"],
+  columnOrder: ["column-1", "column-2", "column-3"],
 };
 
 export default dummyData;

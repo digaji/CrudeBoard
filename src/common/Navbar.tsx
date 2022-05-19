@@ -8,12 +8,12 @@ export default function Navbar(): JSX.Element {
           <img src={logo} className="h-10 pr-6" alt="logo" />
           <ul className="flex flex-row space-x-2">
             <li>
-              <a href="/" className="block border-0 py-2 px-4 text-gray-300 hover:bg-transparent hover:text-white" aria-current="page">
+              <a href="/" className="block border-0 py-2 px-4 text-gray-300 underline-offset-4 hover:bg-transparent hover:text-white hover:underline" aria-current="page">
                 Home
               </a>
             </li>
             <li>
-              <a href="/boards" className="block border-0 py-2 px-4 text-gray-300 hover:bg-transparent hover:text-white">
+              <a href="/boards" className="block border-0 py-2 px-4 text-gray-300 underline-offset-4 hover:bg-transparent hover:text-white hover:underline">
                 Boards
               </a>
             </li>
@@ -21,7 +21,7 @@ export default function Navbar(): JSX.Element {
         </div>
         <ul className="flex flex-row space-x-2">
           <li>
-            <a href="/sign-in" className="block border-0 py-2 px-4 text-gray-300 hover:bg-transparent hover:text-white">
+            <a href="/sign-in" className="block border-0 py-2 px-4 text-gray-300 underline-offset-[6px] hover:bg-transparent hover:text-white hover:underline">
               Sign In
             </a>
           </li>

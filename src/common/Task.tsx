@@ -9,7 +9,7 @@ export default class Task extends React.Component<any> {
           // Droppable expects child to be a function that returns React.component
           // Task
           <div
-            className={`mb-2 rounded-sm border-2 border-gray-200 p-2 ${snapshot.isDragging ? "bg-green-100" : "bg-white"}`}
+            className={`mb-2 rounded-sm border-2 border-gray-200 p-2 ${snapshot.isDragging ? "bg-white border-black" : "bg-white"}`}
             {...provided.draggableProps}
             {...provided.dragHandleProps}
             ref={provided.innerRef}
