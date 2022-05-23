@@ -11,7 +11,6 @@ class InnerList extends React.PureComponent<any> {
 
 export default class Column extends React.Component<any> {
   render() {
-    console.log(this.props.column.colour);
     return (
       <div className="m-2 flex w-1/3 flex-col rounded-lg bg-white">
         {/* Column Title */}
