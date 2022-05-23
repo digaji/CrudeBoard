@@ -12,35 +12,35 @@ export default function App(): JSX.Element {
     <Routes>
       {/* Home route */}
       <Route path="/" element={
-        <div className="min-h-screen bg-gradient-to-b from-crude-blue to-crude-darkBlue">
+        <div className="app">
           <Navbar />
           <Home />
         </div>
       } />
       {/* Sign In route */}
       <Route path="/sign-in" element={
-        <div className="min-h-screen bg-gradient-to-b from-crude-blue to-crude-darkBlue">
+        <div className="app">
           <Navbar />
           <SignIn />
         </div>
       } />
       {/* Register route */}
       <Route path="/register" element={
-        <div className="min-h-screen bg-gradient-to-b from-crude-blue to-crude-darkBlue">
+        <div className="app">
           <Navbar />
           <Register />
         </div>
       } />
       {/* Boards route */}
       <Route path="/boards" element={
-        <div className="min-h-screen bg-gradient-to-b from-crude-blue to-crude-darkBlue">
+        <div className="app">
           <Navbar />
           <Boards />
         </div>
       } />
       {/* 404 Error unknown route */}
       <Route path="*" element={
-      <div className="min-h-screen bg-gradient-to-b from-crude-blue to-crude-darkBlue">
+      <div className="app">
         <Navbar />
         <NotFound />
       </div>
