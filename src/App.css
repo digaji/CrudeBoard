@@ -1,3 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+  .app {
+    @apply min-h-screen bg-gradient-to-b from-crude-blue to-crude-darkBlue;
+  }
+}
