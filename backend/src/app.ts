@@ -1,6 +1,7 @@
 // app.ts
 import express, {Request, Response, NextFunction} from "express";
 import { AuthRouter } from "./adapter/routes/auth/AuthHandler";
+import cors from "cors";
 import dotenv from "dotenv";
 import { board } from "./adapter/routes/board/BoardHandler";
 import { playground } from "./adapter/routes/playground/PlaygroundHandler"
@@ -14,6 +15,7 @@ dotenv.config();
 // Configuration
 app.use(express.json());
 app.use(cookieParser());
+app.use(cors());
 
 const BASE_PATH: string = "/api/v1"
 

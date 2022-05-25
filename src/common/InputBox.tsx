@@ -1,4 +1,4 @@
-export default function InputBox(props: { type: string, placeholder: string, name: string, id: string }): JSX.Element {
+export default function InputBox(props: { type: string, placeholder: string, name: string, id: string, onChange: React.ChangeEventHandler<HTMLInputElement> }): JSX.Element {
   return (
     <input type={props.type}
     className="form-input
@@ -11,6 +11,7 @@ export default function InputBox(props: { type: string, placeholder: string, nam
     focus:border-sky-300 focus:ring focus:ring-sky-200 focus:ring-opacity-50"
     name={props.name}
     id={props.id}
-    placeholder={props.placeholder} />
+    placeholder={props.placeholder}
+    onChange={props.onChange} />
   )
 }
