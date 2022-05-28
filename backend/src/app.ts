@@ -1,27 +1,26 @@
 // app.ts
-import express, {Request, Response, NextFunction} from "express";
+import express, { Request, Response, NextFunction } from "express";
 import { AuthRouter } from "./adapter/routes/auth/AuthHandler";
 import cors from "cors";
 import dotenv from "dotenv";
 import { board } from "./adapter/routes/board/BoardHandler";
-import { playground } from "./adapter/routes/playground/PlaygroundHandler"
+import { playground } from "./adapter/routes/playground/PlaygroundHandler";
 import { FirebaseAuthRouter } from "./adapter/routes/firebaseAuth/FirebaseAuthHandler";
 import cookieParser from "cookie-parser";
 
 export const app = express();
 dotenv.config();
 
-
 // Configuration
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors());
+app.use(cors({ credentials: true, origin: true }));
 
-const BASE_PATH: string = "/api/v1"
+const BASE_PATH: string = "/api/v1";
 
 app.use(`${BASE_PATH}/auth`, AuthRouter);
 app.use(`${BASE_PATH}/board`, board);
-app.use(`${BASE_PATH}/firebaseAuth`, FirebaseAuthRouter)
+app.use(`${BASE_PATH}/firebaseAuth`, FirebaseAuthRouter);
 
 // STRICTLY FOR DEVELOPMENT ONLY
 app.use(`${BASE_PATH}/playground`, playground);
