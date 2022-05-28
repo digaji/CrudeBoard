@@ -12,6 +12,7 @@ export class SessionRepository {
         session.userId = sessionData.userId;
         // @ts-ignore
         session.active = sessionData.active;
+        return session;
     }
 
     static async createSession(session: Session) {

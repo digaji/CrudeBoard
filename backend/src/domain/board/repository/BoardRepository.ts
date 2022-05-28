@@ -9,18 +9,20 @@ export class BoardRepository {
         boardSnapshot.forEach(doc => {
             const data = doc.data()
             const board = new Board()
+            board.id = doc.id;
             board.color = data["color"]
             board.content = data["content"]
             board.priority = data["priority"]
             res.push(board);
         });
-        console.log(res);
         return res;
     }
 
     static async findBoard(userId: string, boardId: string): Promise<Board> {
-        const data = (await db.doc(`users/${userId}/boards/${boardId}`).get()).data();
+        const res = await db.doc(`users/${userId}/boards/${boardId}`).get();
+        const data = res.data();
         const board = new Board();
+        board.id = res.id;
         // @ts-ignore
         board.color = data.color;
         // @ts-ignore
@@ -32,7 +34,8 @@ export class BoardRepository {
 
     static async createBoard(userId: string, board: Board): Promise<string> {
         const {...ob} = board;
-        return (await db.collection(`users/${userId}/boards`).add(ob)).id;
+        const res = await db.collection(`users/${userId}/boards`).add(ob);
+        return res.id;
     }
 
     static async updateBoard(userId: string, boardId: string, updatedAttrs: any) : Promise<void> {

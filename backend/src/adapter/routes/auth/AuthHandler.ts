@@ -7,6 +7,10 @@ import jwt from "jsonwebtoken";
 import { SessionService } from "../../../domain/session/service/SessionService";
 import { Session } from "../../../domain/session/entity/Session";
 import { equal } from "joi";
+import { ColumnService } from "../../../domain/board/service/ColumnService";
+import { BoardService } from "../../../domain/board/service/BoardService";
+import { Board } from "../../../domain/board/entity/Board";
+import { Column } from "../../../domain/board/entity/Column";
 
 export class AuthHandler {
     static async register(req: Request, res: Response, next: NextFunction) {
@@ -25,6 +29,14 @@ export class AuthHandler {
 
         // save the user in the database
         const {id} = await usersRef.add({username: req.body.username, password: hashedPassword});
+
+        // 1. Create board for the user
+        const boardId = await BoardService.createBoard(id, new Board());
+        // 2. Create three columns for the user
+        const column = new Column();
+        await ColumnService.createColumn(id, boardId, column);
+        await ColumnService.createColumn(id, boardId, column);
+        await ColumnService.createColumn(id, boardId, column);
 
         // create and grant a token when the user logs in
         return res.status(200).send({userId: id});
@@ -72,6 +84,17 @@ export class AuthHandler {
         }
     }
 
+    static async requireSessionId(req: Request, res: Response, next: NextFunction) {
+        const { sessionId } = req.cookies;
+        if (sessionId) {
+            // What happends if the session id doesn't exist?
+            // @ts-ignore
+            req.userId = await SessionService.findSession(sessionId);
+            return next();
+        } else {
+            return res.status(400).send("Session ID must be included in the request header");
+        }
+    }
 }
 
 export const AuthRouter = Router();
