@@ -65,7 +65,7 @@ export class AuthHandler {
         try {
             const {sessionId} = req.cookies;
             console.log(sessionId);
-            SessionService.removeSession(sessionId);
+            SessionService.removeSession(JSON.parse(sessionId).sessionId);
             return res.status(200).send("User has signed out");
         } catch (e) {
             return res.status(400).send(e);
