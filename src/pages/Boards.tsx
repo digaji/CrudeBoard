@@ -2,8 +2,9 @@ import React from "react";
 import dummyData from "../misc/DummyData";
 import Column from "../common/Column";
 import { DragDropContext, DropResult } from "react-beautiful-dnd";
+import { Cookies } from "react-cookie";
 
-class Board extends React.Component {
+class Boards extends React.Component<{ cookies: Cookies }, {}> {
   state = dummyData;
 
   onDragEnd = (result: DropResult) => {
@@ -73,7 +74,7 @@ class Board extends React.Component {
 
       this.setState(newState);
       // TODO: Call end point to let server know that reorder has occured
-    };
+    }
   };
 
   render() {
@@ -93,6 +94,4 @@ class Board extends React.Component {
   }
 }
 
-export default function Boards(): JSX.Element {
-  return <Board />;
-}
+export default Boards;
