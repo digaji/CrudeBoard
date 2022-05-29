@@ -18,7 +18,7 @@ dotenv.config();
 app.use(express.json({limit: "50mb"}));
 app.use(express.urlencoded({limit: "50mb"}));
 app.use(cookieParser());
-app.use(cors({ credentials: true }));
+app.use(cors({ credentials: true, origin: true }));
 const BASE_PATH: string = "/api/v1";
 
 app.use(`${BASE_PATH}/auth`, AuthRouter);
