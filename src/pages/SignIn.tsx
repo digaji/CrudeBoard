@@ -34,7 +34,7 @@ class SignIn extends React.Component<{ cookies: Cookies }, { email: string; pass
 
     try {
       const res = await axios.post(this.url, {
-        username: this.state.email,
+        email: this.state.email,
         password: this.state.password,
       });
 

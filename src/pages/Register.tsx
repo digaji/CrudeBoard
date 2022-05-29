@@ -30,7 +30,7 @@ class Register extends React.Component<{}, { email: string; password: string }> 
     // Reset all input
     Array.from(document.querySelectorAll("input")).forEach((input) => (input.value = ""));
     const res = await axios.post(this.url, {
-      username: this.state.email,
+      email: this.state.email,
       password: this.state.password,
     });
     console.log(res);
