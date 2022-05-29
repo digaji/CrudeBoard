@@ -2,6 +2,7 @@ import React from "react";
 import InputBox from "../common/InputBox";
 import axios from "axios";
 import { Cookies } from "react-cookie";
+import { backendUrl } from "../misc/Constants";
 
 class SignIn extends React.Component<{ cookies: Cookies }, { email: string; password: string; errorContent: JSX.Element }> {
   url: string;
@@ -12,7 +13,7 @@ class SignIn extends React.Component<{ cookies: Cookies }, { email: string; pass
       password: "",
       errorContent: <p></p>,
     };
-    this.url = "http://localhost:3000/api/v1/auth/login";
+    this.url = backendUrl + "/auth/login";
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -42,6 +43,7 @@ class SignIn extends React.Component<{ cookies: Cookies }, { email: string; pass
         console.log(res);
         this.props.cookies.set("sessionId", res.data.sessionId, { path: "/" });
         console.log(this.props.cookies.get("sessionId"));
+        window.location.assign("/"); // Refresh browser and redirect to home page
       }
     } catch (error) {
       console.log(error);
