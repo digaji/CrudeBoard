@@ -1,16 +1,9 @@
-import express, { Router, Request, Response, NextFunction } from "express";
-import { usersRef } from "../../database/firestore";
-import { registerValidation, loginValidation } from "../../../validation";
-import bcrypt from "bcryptjs";
-import { auth } from "../../database/firestore";
-import jwt from "jsonwebtoken";
+import { Router, Request, Response, NextFunction } from "express";
+import { registerValidation, loginValidation } from "./validation";
 import { SessionService } from "../../../domain/session/service/SessionService";
 import { Session } from "../../../domain/session/entity/Session";
-import { equal } from "joi";
-import { ColumnService } from "../../../domain/board/service/ColumnService";
-import { BoardService } from "../../../domain/board/service/BoardService";
-import { Board } from "../../../domain/board/entity/Board";
-import { Column } from "../../../domain/board/entity/Column";
+import { UserService } from "../../../domain/user/service/UserService";
+import { User } from "../../../domain/user/entity/User";
 
 export class AuthHandler {
     static async register(req: Request, res: Response, next: NextFunction) {
@@ -20,26 +13,19 @@ export class AuthHandler {
         if (error) return res.status(400).send(error.details[0].message);
         
         // checking if the user exists
-        const snapshot = await usersRef.where("username", "==", req.body.username).get();
-        if (!snapshot.empty) return res.status(400).send("User already exists");
+        const {email, password, organization} = req.body;
+        const userExists = await UserService.userExistsByEmail(email);
+        // const snapshot = await usersRef.where("username", "==", req.body.username).get();
+        if (userExists) return res.status(400).send("User already exists");
         
-        // Hashing the password
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(req.body.password, salt);
-
-        // save the user in the database
-        const {id} = await usersRef.add({username: req.body.username, password: hashedPassword});
-
-        // 1. Create board for the user
-        const boardId = await BoardService.createBoard(id, new Board());
-        // 2. Create three columns for the user
-        const column = new Column();
-        await ColumnService.createColumn(id, boardId, column);
-        await ColumnService.createColumn(id, boardId, column);
-        await ColumnService.createColumn(id, boardId, column);
+        const employee = new User();
+        employee.email = email;
+        employee.password = password;
+        employee.organization = organization;
+        const userId = await UserService.createEmployee(employee);
 
         // create and grant a token when the user logs in
-        return res.status(200).send({userId: id});
+        return res.status(200).send({userId: userId});
     }
 
     static async login(req: Request, res: Response, next: NextFunction) {
@@ -48,20 +34,23 @@ export class AuthHandler {
         if (error) return res.status(400).send(error.details[0].message);
 
         // checking if the user exists
-        const snapshot = await usersRef.where("username", "==", req.body.username).get();
-        if (snapshot.empty) return res.status(400).send("User not found");
+        const {email, password} = req.body;
+        const user = new User();
+        user.email = email;
+        user.password = password;
+        const userExists = await UserService.userExistsByEmail(user.email!);
+        if (!userExists) return res.status(400).send("User not found");
 
         // checking password
-        const userDoc = snapshot.docs[0];
-        const user = userDoc.data();
-        const validPass = await bcrypt.compare(req.body.password, user.password);
+        const validPass = await UserService.validateUser(user);
         if (!validPass) return res.status(400).send("Invalid password");
 
-        // const token = jwt.sign({_id: user}, process.env.TOKEN_SECRET);
+        const users = await UserService.findUserByEmail(user.email!);
+        const actualUser = users[0];
         // firebase generated token
         try {
             const session = new Session();
-            session.userId = userDoc.id;
+            session.userId = actualUser.id!;
             session.active = true;
             const sessionId: string = await SessionService.createSession(session);
             
@@ -76,9 +65,13 @@ export class AuthHandler {
         
         try {
             const {sessionId} = req.cookies;
-            console.log(sessionId);
-            SessionService.removeSession(JSON.parse(sessionId).sessionId);
-            return res.status(200).send("User has signed out");
+            if (sessionId) {
+                console.log(sessionId);
+                SessionService.removeSession(sessionId);
+                return res.status(200).send("User has signed out");
+            } else {
+                return res.status(400).send("sessionId is not found");
+            }
         } catch (e) {
             return res.status(400).send(e);
         }
@@ -87,7 +80,6 @@ export class AuthHandler {
     static async requireSessionId(req: Request, res: Response, next: NextFunction) {
         const { sessionId } = req.cookies;
         if (sessionId) {
-            // What happends if the session id doesn't exist?
             // @ts-ignore
             req.userId = await SessionService.findSession(sessionId);
             return next();

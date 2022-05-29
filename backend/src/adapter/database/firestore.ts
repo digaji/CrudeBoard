@@ -10,4 +10,5 @@ initializeApp({
 
 export const auth = getAuth();
 export const db = getFirestore();
+db.settings({ignoreUndefinedProperties: true});
 export const usersRef = db.collection("users");

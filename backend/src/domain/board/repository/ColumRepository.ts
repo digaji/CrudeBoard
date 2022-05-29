@@ -6,8 +6,14 @@ export class ColumnRepository {
 
     static async createColumn(userId: string, boardId: string, column: Column) {
         const {...ob} = column;
-        const res = await db.collection(`users/${userId}/boards/${boardId}/columns`).add(ob);
-        return res.id;
+        let res;
+        if (column.id) {
+            res = await db.doc(`users/${userId}/boards/${boardId}/columns/${column.id}`).set(ob);
+            return column.id;
+       } else {
+            res = await db.collection(`users/${userId}/boards/${boardId}/columns`).add(ob);
+            return res.id;
+       }
     }
 
     static async findAllColumn(userId: string, boardId: string) {
@@ -52,5 +58,11 @@ export class ColumnRepository {
     static async moveTask(userId: string, boardId: string, columnFromId: string, columnToId: string, taskId: string) {
         this.addTask(userId, boardId, columnToId, taskId);
         this.removeTask(userId, boardId, columnFromId, taskId);
+    }
+
+    static async setTaskIds(userId: string, boardId: string, columnId: string, taskIds: string[]) {
+        await db.doc(`users/${userId}/boards/${boardId}/columns/${columnId}`).update({
+            taskIds: taskIds
+        });
     }
 }

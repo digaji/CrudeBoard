@@ -32,4 +32,8 @@ export class ColumnService {
     static async moveTask(userId: string, boardId: string, columnFromId: string, columnToId: string, taskId: string) {
         ColumnRepository.moveTask(userId, boardId, columnFromId, columnToId, taskId);
     }
+
+    static async setTaskIds(userId: string, boardId: string, columnId: string, taskIds: string[]) {
+        ColumnRepository.setTaskIds(userId, boardId, columnId, taskIds);
+    }
 }

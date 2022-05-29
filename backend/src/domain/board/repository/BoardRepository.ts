@@ -34,8 +34,13 @@ export class BoardRepository {
 
     static async createBoard(userId: string, board: Board): Promise<string> {
         const {...ob} = board;
-        const res = await db.collection(`users/${userId}/boards`).add(ob);
-        return res.id;
+        if (board.id) {
+            await db.doc(`users/${userId}/boards/${board.id}`).set(ob);
+            return board.id;
+        } else {
+            const res = await db.collection(`users/${userId}/boards`).add(ob);
+            return res.id;
+        }
     }
 
     static async updateBoard(userId: string, boardId: string, updatedAttrs: any) : Promise<void> {

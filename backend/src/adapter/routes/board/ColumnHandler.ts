@@ -100,6 +100,25 @@ export class ColumnHandler {
             return res.status(500).send("No board has been created for this user");
         }
     }
+
+    static async setTaskIds(req: Request, res: Response, next: NextFunction) {
+        // @ts-ignore
+        const {userId} = req.userId;
+        const boards = await BoardService.findAllBoard(userId);
+        const {columnId} = req.params;
+        const taskIds = req.body;
+        if (boards.length > 0) {
+            const boardId = boards[0].id;
+            try {
+                await ColumnService.setTaskIds(userId, boardId!, columnId, taskIds);
+                return res.status(200).send(`Column ${columnId} has been successfully updated`);
+            } catch (err) {
+                console.log(err);
+            } 
+        } else {
+            res.status(500).send("No board has been created for this user");
+        }
+    }
 }
 
 export const column = Router();
@@ -107,6 +126,8 @@ column.get("/", ColumnHandler.findAllColumn);
 column.get("/:columnId", ColumnHandler.findColumn);
 column.post("/", ColumnHandler.createColumn);
 column.delete("/:columnId", ColumnHandler.removeColumn);
+
+column.post("/:columnId/task", ColumnHandler.setTaskIds);
 column.post("/:columnId/task/:taskId", ColumnHandler.addTask);
 column.delete("/:columnId/task/:taskId", ColumnHandler.removeTask);
 column.put("/:columnFromId/:columnToId/task/:taskId", ColumnHandler.moveTask);
