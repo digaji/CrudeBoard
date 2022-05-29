@@ -12,7 +12,11 @@ function LogOut(props: { cookies: Cookies }) {
           await axios
             .post(
               "http://localhost:3000/api/v1/auth/signout",
-              {},
+              {
+                headers: {
+                  Cookie: `sessionId=${props.cookies.get("sessionId").sessionId}`,
+                },
+              },
               { withCredentials: true }
             )
             .then((response) => {

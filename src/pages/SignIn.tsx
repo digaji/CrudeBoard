@@ -40,7 +40,7 @@ class SignIn extends React.Component<{ cookies: Cookies }, { email: string; pass
 
       if (res.status === 200) {
         console.log(res);
-        this.props.cookies.set("sessionId", res.data.sessionId, { path: "/" });
+        this.props.cookies.set("sessionId", res.data, { path: "/" });
         console.log(this.props.cookies.get("sessionId"));
       }
     } catch (error) {
