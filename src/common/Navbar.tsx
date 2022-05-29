@@ -1,6 +1,7 @@
 import logo from "../assets/crudeboard-logo.svg";
 import { Cookies } from "react-cookie";
 import axios from "axios";
+import { backendUrl } from "../misc/Constants";
 
 function LogOut(props: { cookies: Cookies }) {
   return (
@@ -9,16 +10,12 @@ function LogOut(props: { cookies: Cookies }) {
         href="/"
         onClick={async (e) => {
           e.preventDefault();
-          await axios
-            .post(
-              "http://localhost:3000/api/v1/auth/signout",
-              {},
-              { withCredentials: true }
-            )
-            .then((response) => {
-              console.log(response);
-            });
-          props.cookies.remove("sessionId");
+          // Remove sessionId cookie from db
+          await axios.post(backendUrl + "/auth/signout", {}, { withCredentials: true }).then((response) => {
+            console.log(response);
+          });
+          props.cookies.remove("sessionId"); // Remove sessionId cookie from browser
+          window.location.assign("/"); // Refresh browser and redirect to home page
         }}
         className="block border-0 py-2 px-4 text-gray-300 underline-offset-[6px] transition-all duration-300 hover:bg-transparent hover:text-white hover:underline"
       >

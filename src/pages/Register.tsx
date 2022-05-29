@@ -1,16 +1,18 @@
 import React from "react";
 import InputBox from "../common/InputBox";
 import axios from "axios";
+import { backendUrl } from "../misc/Constants";
 
-class Register extends React.Component<{}, { email: string; password: string }> {
+class Register extends React.Component<{}, { email: string; password: string; responseContent: JSX.Element }> {
   url: string;
   constructor(props: any) {
     super(props);
     this.state = {
       email: "",
       password: "",
+      responseContent: <p></p>,
     };
-    this.url = "http://localhost:3000/api/v1/auth/register";
+    this.url = backendUrl + "/auth/register";
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -29,11 +31,26 @@ class Register extends React.Component<{}, { email: string; password: string }> 
     event.preventDefault();
     // Reset all input
     Array.from(document.querySelectorAll("input")).forEach((input) => (input.value = ""));
-    const res = await axios.post(this.url, {
-      email: this.state.email,
-      password: this.state.password,
-    });
-    console.log(res);
+
+    try {
+      const res = await axios.post(this.url, {
+        email: this.state.email,
+        password: this.state.password,
+      });
+
+      if (res.status === 200) {
+        console.log(res);
+        this.setState({
+          responseContent: <p className="mt-5 text-center text-2xl font-medium text-white">Successful Registration!</p>,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      this.setState({
+        // @ts-ignore
+        responseContent: <p className="mt-5 text-center text-2xl font-medium text-red-500">{error.response.data}</p>,
+      });
+    }
   };
 
   render() {
@@ -51,6 +68,7 @@ class Register extends React.Component<{}, { email: string; password: string }> 
           </label>
           {/* Pattern checking for password (must be more than 5 characters) */}
           <InputBox onChange={this.handleChange} type="password" name="password" id="password" pattern="^.{5,}$" placeholder="Password" />
+          {this.state.responseContent}
           <button type="submit" className="my-8 mx-auto w-2/6 cursor-pointer rounded bg-sky-500 p-2 text-white hover:bg-sky-600 active:bg-sky-700">
             Register
           </button>
