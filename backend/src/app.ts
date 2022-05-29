@@ -32,5 +32,5 @@ app.use(`${BASE_PATH}/firebaseAuth`, FirebaseAuthRouter);
 app.use(`${BASE_PATH}/playground`, playground);
 
 // listen on port
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Application listening at http://localhost:${PORT}`));
