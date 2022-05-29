@@ -70,6 +70,7 @@ export class AuthHandler {
                 SessionService.removeSession(sessionId);
                 return res.status(200).send("User has signed out");
             } else {
+                console.log(req.cookies);
                 return res.status(400).send("sessionId is not found");
             }
         } catch (e) {
