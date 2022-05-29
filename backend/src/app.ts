@@ -9,21 +9,23 @@ import { FirebaseAuthRouter } from "./adapter/routes/firebaseAuth/FirebaseAuthHa
 import cookieParser from "cookie-parser";
 import { task } from "./adapter/routes/board/TaskHandler";
 import { column } from "./adapter/routes/board/ColumnHandler";
+import { nodeflux } from "./adapter/routes/nodeflux/NodefluxHandler";
 
 export const app = express();
 dotenv.config();
 
 // Configuration
-app.use(express.json());
+app.use(express.json({limit: "50mb"}));
+app.use(express.urlencoded({limit: "50mb"}));
 app.use(cookieParser());
 app.use(cors({ credentials: true, origin: true }));
-
 const BASE_PATH: string = "/api/v1";
 
 app.use(`${BASE_PATH}/auth`, AuthRouter);
 app.use(`${BASE_PATH}/board`, board);
 app.use(`${BASE_PATH}/task`, AuthHandler.requireSessionId, task);
 app.use(`${BASE_PATH}/column`, AuthHandler.requireSessionId, column);
+app.use(`${BASE_PATH}/nodeflux`, nodeflux);
 app.use(`${BASE_PATH}/firebaseAuth`, FirebaseAuthRouter);
 
 // STRICTLY FOR DEVELOPMENT ONLY

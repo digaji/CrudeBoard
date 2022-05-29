@@ -1,5 +1,6 @@
 export class Task {
-    content: string | null = null;
+    id: string | undefined = undefined;
+    content: string | undefined = undefined;
 
     toString() : string {
         return `Task(color=${this.content})`;

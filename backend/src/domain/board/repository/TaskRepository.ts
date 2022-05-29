@@ -3,6 +3,14 @@ import { Task } from "../entity/Task";
 
 export class TaskRepository {
 
+    static docToTask(doc: FirebaseFirestore.DocumentData) {
+        const task = new Task();
+        const data = doc.data();
+        task.id = doc.id;
+        task.content = data.content;
+        return task;
+    }
+
     static async createTask(userId: string, boardId: string, task: Task) {
         const {...ob} = task;
         const res = await db.collection(`users/${userId}/boards/${boardId}/tasks`).add(ob);
@@ -12,12 +20,7 @@ export class TaskRepository {
     static async findAllTask(userId: string, boardId: string) {
         const taskSnapshot = await db.collection(`users/${userId}/boards/${boardId}/tasks`).get();
         let res: Task[] = [];
-        taskSnapshot.forEach(doc => {
-            const data = doc.data();
-            const task = new Task();
-            task.content = data["content"];
-            res.push(task);
-        });
+        taskSnapshot.forEach(doc => res.push(this.docToTask(doc)));
         return res;
     }
 

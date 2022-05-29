@@ -3,6 +3,7 @@ import {Router, Request, Response, NextFunction } from "express"
 // 
 import { usersRef } from "../../database/firestore";
 import { User } from "../../../domain/user/entity/User";
+import { NodefluxClient } from "../../nodeflux/NodefluxClient";
 
 export const playground = Router();
 
@@ -27,3 +28,11 @@ playground.post("/self-body", async (req: Request, res: Response, next: NextFunc
     // @ts-ignore
     res.status(200).send(req.body);
 });
+
+// const nfClient = new NodefluxClient();
+
+// playground.get("/test-nf-get-token", async (req: Request, res: Response, next: NextFunction) => {
+//     const data = await nfClient.requestHeaderResources();
+//     const header = await nfClient.buildHeaderFromResources(data);
+//     res.status(200).json(header).send();
+// })
