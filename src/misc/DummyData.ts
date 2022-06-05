@@ -6,7 +6,7 @@ interface data {
 
 const dummyData: data = {
   tasks: {
-    "task-1": { id: "task-1", content: "Do web app project" },
+    "task-1": { id: "task-1", content: "" },
     "task-2": { id: "task-2", content: "Organize the excel sheet" },
     "task-3": { id: "task-3", content: "Charge my phone" },
     "task-4": { id: "task-4", content: "Lunch with colleagues" },
