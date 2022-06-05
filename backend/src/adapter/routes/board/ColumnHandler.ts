@@ -25,7 +25,11 @@ export class ColumnHandler {
         if (boards.length > 0) {
             const boardId = boards[0].id;
             const columns = await ColumnService.findAllColumn(userId, boardId!);
-            return res.status(200).json(columns).send();
+            let data: any = {};
+            columns.forEach((val, id) => {
+                data[val.id!] = val;
+            });
+            return res.status(200).json(data);
         } else {
             return res.status(500).send("No board has been created for this user");
         }

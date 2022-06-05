@@ -14,10 +14,16 @@ export class UserService {
         await BoardService.createBoard(userId, board);
         const column = new Column();
         column.id = "column-1";
+        column.title = "To Do";
+        column.colour = "bg-white";
         await ColumnService.createColumn(userId, board.id, column);
         column.id = "column-2";
+        column.title = "In Progress";
+        column.colour = "bg-orange-200";
         await ColumnService.createColumn(userId, board.id, column);
         column.id = "column-3";
+        column.title = "Completed";
+        column.colour = "bg-green-200";
         await ColumnService.createColumn(userId, board.id, column);
     }
 

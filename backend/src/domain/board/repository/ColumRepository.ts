@@ -4,6 +4,16 @@ import { Column } from "../entity/Column";
 
 export class ColumnRepository {
 
+    static docToCol(doc: FirebaseFirestore.DocumentData) {
+        const col = new Column();
+        const data = doc.data();
+        col.id = data.id;
+        col.title = data.title;
+        col.colour = data.colour;
+        col.taskIds = data.taskIds;
+        return col;
+    }
+
     static async createColumn(userId: string, boardId: string, column: Column) {
         const {...ob} = column;
         let res;
@@ -20,23 +30,19 @@ export class ColumnRepository {
         const columnSnapshot = await db.collection(`users/${userId}/boards/${boardId}/columns`).get();
         let res: Column[] = [];
         columnSnapshot.forEach(doc => {
-            const data = doc.data();
-            const column = new Column();
-            column.id = doc.id;
-            column.taskIds = data["taskIds"];
-            res.push(column);
+            res.push(this.docToCol(doc));
         });
         return res;
     }
 
     static async findColumn(userId: string, boardId: string, columnId: string) {
         const doc = await db.doc(`users/${userId}/boards/${boardId}/columns/${columnId}`).get();
-        const data = doc.data();
-        const column = new Column();
-        column.id = doc.id;
+        // const data = doc.data();
+        // const column = new Column();
+        // column.id = doc.id;
         // @ts-ignore
-        column.taskIds = data.taskIds;
-        return column;
+        // column.taskIds = data.taskIds;
+        return this.docToCol(doc);
     }
 
     static async removeColumn(userId: string, boardId: string, columnId: string) {

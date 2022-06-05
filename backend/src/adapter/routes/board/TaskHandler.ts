@@ -15,7 +15,11 @@ export class TaskHandler {
             // select the first board
             const boardId = boards[0].id;
             const tasks = await TaskService.findAllTask(userId!, boardId!);
-            return res.status(200).json(tasks).send();
+            let data : any = {};
+            tasks.forEach((val, idx) => {
+                data[val.id!] = val;
+            });
+            return res.status(200).json(data);
         } else {
             return res.status(500).send("No board has been created for this user");
         }
