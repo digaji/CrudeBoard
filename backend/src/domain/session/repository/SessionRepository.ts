@@ -5,14 +5,18 @@ export class SessionRepository {
 
     static async findSession(sessionId: string) {
         const sessionSnapshot = await db.doc(`sessions/${sessionId}`).get();
-        const sessionData = sessionSnapshot.data();
+        if (sessionSnapshot.exists) {
+            const sessionData = sessionSnapshot.data();
 
-        const session = new Session();
-        // @ts-ignore
-        session.userId = sessionData.userId;
-        // @ts-ignore
-        session.active = sessionData.active;
-        return session;
+            const session = new Session();
+            // @ts-ignore
+            session.userId = sessionData.userId;
+            // @ts-ignore
+            session.active = sessionData.active;
+            return session;
+        } else {
+            return null;
+        }
     }
 
     static async createSession(session: Session) {

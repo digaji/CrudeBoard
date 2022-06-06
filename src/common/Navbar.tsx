@@ -10,8 +10,15 @@ function LogOut(props: { cookies: Cookies }) {
         href="/"
         onClick={async (e) => {
           e.preventDefault();
+          const axiosApp = axios.create({
+            baseURL: backendUrl,
+            withCredentials: true,
+            headers: {
+              sessionid: props.cookies.get("sessionId")
+            }
+          })
           // Remove sessionId cookie from db
-          await axios.post(backendUrl + "/auth/signout", {}, { withCredentials: true }).then((response) => {
+          await axiosApp.post("/auth/signout", {}).then((response) => {
             console.log(response);
           });
           props.cookies.remove("sessionId"); // Remove sessionId cookie from browser

@@ -19,6 +19,10 @@ app.use(express.json({limit: "50mb"}));
 app.use(express.urlencoded({limit: "50mb"}));
 app.use(cookieParser());
 app.use(cors({ credentials: true, origin: true }));
+app.use((req: Request, res: Response, next: NextFunction) => {
+    res.setHeader("Access-Control-Allow-Headers", "Set-Cookie");
+    next();
+})
 const BASE_PATH: string = "/api/v1";
 
 app.use(`${BASE_PATH}/auth`, AuthRouter);
