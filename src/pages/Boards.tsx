@@ -7,28 +7,38 @@ import axios from "axios";
 import { backendUrl } from "../misc/Constants";
 
 class Boards extends React.Component<{ cookies: Cookies }, {}> {
+  constructor(props: any) {
+    super(props);
+
+    this.updateBoard = this.updateBoard.bind(this);
+  }
   state = dummyData;
 
-  async componentDidMount() {
+  axiosApp = axios.create({
+    baseURL: backendUrl,
+    withCredentials: true,
+    headers: {
+      sessionid: this.props.cookies.get("sessionId"),
+    },
+  });
+
+  async updateBoard() {
     if (this.props.cookies.get("sessionId")) {
-      const axiosApp = axios.create({
-        baseURL: backendUrl,
-        withCredentials: true,
-        headers: {
-          sessionid: this.props.cookies.get("sessionId")
-        }
-      });
       // Overwrite column data from backend
-      const res_column = await axiosApp.get("/column");
+      const res_column = await this.axiosApp.get("/column");
 
       // Overwrite task data from backend
-      const res_task = await axiosApp.get("/task");
+      const res_task = await this.axiosApp.get("/task");
       this.setState({
         columns: res_column.data,
-        tasks: res_task.data
+        tasks: res_task.data,
       });
-      console.log(this.state);
     }
+  }
+
+  async componentDidMount() {
+    this.updateBoard();
+    console.log(this.state);
   }
 
   onDragEnd = async (result: DropResult) => {
@@ -36,13 +46,13 @@ class Boards extends React.Component<{ cookies: Cookies }, {}> {
       baseURL: backendUrl,
       withCredentials: true,
       headers: {
-        sessionid: this.props.cookies.get("sessionId")
-      }
+        sessionid: this.props.cookies.get("sessionId"),
+      },
     });
 
     // Reorder our column
     const { destination, source, draggableId } = result;
-    console.log(source)
+    console.log(source);
 
     // If no destination, do nothing
     if (!destination) {
@@ -78,8 +88,11 @@ class Boards extends React.Component<{ cookies: Cookies }, {}> {
       };
 
       this.setState(newState);
-      // Inform backend that reorder has occured
-      await axiosApp.post(`/column/${source.droppableId}/task`, newTaskIds);
+
+      if (this.props.cookies.get("sessionId")) {
+        // Inform backend that reorder has occured
+        await axiosApp.post(`/column/${source.droppableId}/task`, newTaskIds);
+      }
     } else {
       // If the task is being dragged to a different column
       const startTaskIds = Array.from(startColumn.taskIds);
@@ -107,9 +120,12 @@ class Boards extends React.Component<{ cookies: Cookies }, {}> {
       };
 
       this.setState(newState);
-      // Inform backend that reorder has occured
-      await axiosApp.post(`/column/${source.droppableId}/task`, startTaskIds);
-      await axiosApp.post(`/column/${destination.droppableId}/task`, finishTaskIds);
+
+      if (this.props.cookies.get("sessionId")) {
+        // Inform backend that reorder has occured
+        await axiosApp.post(`/column/${source.droppableId}/task`, startTaskIds);
+        await axiosApp.post(`/column/${destination.droppableId}/task`, finishTaskIds);
+      }
     }
   };
 
@@ -122,7 +138,7 @@ class Boards extends React.Component<{ cookies: Cookies }, {}> {
             const column = this.state.columns[columnId];
             // All task data
             const tasks = column.taskIds.map((taskId: string) => this.state.tasks[taskId]);
-            return <Column key={column.id} column={column} tasks={tasks} />;
+            return <Column key={column.id} column={column} tasks={tasks} cookies={this.props.cookies} func={this.updateBoard} />;
           })}
         </div>
       </DragDropContext>
