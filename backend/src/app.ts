@@ -29,7 +29,7 @@ app.use(`${BASE_PATH}/auth`, AuthRouter);
 app.use(`${BASE_PATH}/board`, board);
 app.use(`${BASE_PATH}/task`, AuthHandler.requireSessionId, task);
 app.use(`${BASE_PATH}/column`, AuthHandler.requireSessionId, column);
-// app.use(`${BASE_PATH}/nodeflux`, nodeflux);
+app.use(`${BASE_PATH}/nodeflux`, nodeflux);
 app.use(`${BASE_PATH}/firebaseAuth`, FirebaseAuthRouter);
 
 // STRICTLY FOR DEVELOPMENT ONLY
