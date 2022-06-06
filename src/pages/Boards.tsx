@@ -3,13 +3,46 @@ import dummyData from "../misc/DummyData";
 import Column from "../common/Column";
 import { DragDropContext, DropResult } from "react-beautiful-dnd";
 import { Cookies } from "react-cookie";
+import axios from "axios";
+import { backendUrl } from "../misc/Constants";
 
 class Boards extends React.Component<{ cookies: Cookies }, {}> {
   state = dummyData;
 
-  onDragEnd = (result: DropResult) => {
+  async componentDidMount() {
+    if (this.props.cookies.get("sessionId")) {
+      const axiosApp = axios.create({
+        baseURL: backendUrl,
+        withCredentials: true,
+        headers: {
+          sessionid: this.props.cookies.get("sessionId")
+        }
+      });
+      // Overwrite column data from backend
+      const res_column = await axiosApp.get("/column");
+
+      // Overwrite task data from backend
+      const res_task = await axiosApp.get("/task");
+      this.setState({
+        columns: res_column.data,
+        tasks: res_task.data
+      });
+      console.log(this.state);
+    }
+  }
+
+  onDragEnd = async (result: DropResult) => {
+    const axiosApp = axios.create({
+      baseURL: backendUrl,
+      withCredentials: true,
+      headers: {
+        sessionid: this.props.cookies.get("sessionId")
+      }
+    });
+
     // Reorder our column
     const { destination, source, draggableId } = result;
+    console.log(source)
 
     // If no destination, do nothing
     if (!destination) {
@@ -45,7 +78,8 @@ class Boards extends React.Component<{ cookies: Cookies }, {}> {
       };
 
       this.setState(newState);
-      // TODO: Call end point to let server know that reorder has occured
+      // Inform backend that reorder has occured
+      await axiosApp.post(`/column/${source.droppableId}/task`, newTaskIds);
     } else {
       // If the task is being dragged to a different column
       const startTaskIds = Array.from(startColumn.taskIds);
@@ -73,7 +107,9 @@ class Boards extends React.Component<{ cookies: Cookies }, {}> {
       };
 
       this.setState(newState);
-      // TODO: Call end point to let server know that reorder has occured
+      // Inform backend that reorder has occured
+      await axiosApp.post(`/column/${source.droppableId}/task`, startTaskIds);
+      await axiosApp.post(`/column/${destination.droppableId}/task`, finishTaskIds);
     }
   };
 

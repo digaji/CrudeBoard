@@ -64,10 +64,11 @@ export class AuthHandler {
     static async signout(req: Request, res: Response, next: NextFunction) {
         
         try {
-            const {sessionId} = req.cookies;
-            if (sessionId) {
-                console.log(sessionId);
-                SessionService.removeSession(sessionId);
+            const {sessionid} = req.headers;
+            if (sessionid) {
+                console.log(sessionid);
+                // @ts-ignore
+                SessionService.removeSession(sessionid);
                 return res.status(200).send("User has signed out");
             } else {
                 console.log(req.cookies);
@@ -79,11 +80,17 @@ export class AuthHandler {
     }
 
     static async requireSessionId(req: Request, res: Response, next: NextFunction) {
-        const { sessionId } = req.cookies;
-        if (sessionId) {
+        const { sessionid } = req.headers;
+        if (sessionid) {
             // @ts-ignore
-            req.userId = await SessionService.findSession(sessionId);
-            return next();
+            const id = await SessionService.findSession(sessionid);
+            if (id) {
+                // @ts-ignore
+                req.userId = id;
+                return next();
+            } else {
+                return res.status(400).send("Session ID not found");
+            }
         } else {
             return res.status(400).send("Session ID must be included in the request header");
         }

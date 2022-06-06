@@ -40,7 +40,6 @@ export default function App(): JSX.Element {
         <div className="app">
           <Navbar cookies={cookies}/>
           <Boards cookies={cookies}/>
-          {/* {isLoggedIn ? <Boards cookies={cookies}/> : <Navigate to="/" />} */}
         </div>
       } />
       {/* 404 Error unknown route */}
