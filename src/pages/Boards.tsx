@@ -10,16 +10,19 @@ class Boards extends React.Component<{ cookies: Cookies }, {}> {
   state = dummyData;
 
   async componentDidMount() {
-    // Overwrite column data from backend
-    const res_column = await axios.get(backendUrl + "/column", { withCredentials: true });
+    // Update the board if logged in
+    if (this.props.cookies.get("sessionId")) {
+      // Overwrite column data from backend
+      const res_column = await axios.get(backendUrl + "/column", { withCredentials: true });
 
-    // Overwrite task data from backend
-    const res_task = await axios.get(backendUrl + "/task", { withCredentials: true });
-    this.setState({
-      columns: res_column.data,
-      tasks: res_task.data
-    });
-    console.log(this.state);
+      // Overwrite task data from backend
+      const res_task = await axios.get(backendUrl + "/task", { withCredentials: true });
+      this.setState({
+        columns: res_column.data,
+        tasks: res_task.data
+      });
+      console.log(this.state);
+    }
   }
 
   onDragEnd = async (result: DropResult) => {
@@ -61,7 +64,8 @@ class Boards extends React.Component<{ cookies: Cookies }, {}> {
       };
 
       this.setState(newState);
-      // TODO: Call end point to let server know that reorder has occured
+
+      // Inform backend that reorder has occured
       await axios.post(backendUrl + `/column/${source.droppableId}/task`, newTaskIds, { withCredentials: true });
     } else {
       // If the task is being dragged to a different column
@@ -90,7 +94,8 @@ class Boards extends React.Component<{ cookies: Cookies }, {}> {
       };
 
       this.setState(newState);
-      // TODO: Call end point to let server know that reorder has occured
+
+      // Inform backend that reorder has occured
       await axios.post(backendUrl + `/column/${source.droppableId}/task`, startTaskIds, { withCredentials: true });
       await axios.post(backendUrl + `/column/${destination.droppableId}/task`, finishTaskIds, { withCredentials: true });
     }

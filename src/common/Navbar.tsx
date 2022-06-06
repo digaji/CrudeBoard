@@ -71,12 +71,17 @@ export default function Navbar(props: { cookies: Cookies }): JSX.Element {
                 href="/boards"
                 className="block border-0 py-2 px-4 text-gray-300 underline-offset-4 transition-all duration-300 hover:bg-transparent hover:text-white hover:underline"
               >
-                Boards
+                {isLoggedIn ? "Boards" : "Demo Board"}
               </a>
             </li>
           </ul>
         </div>
-        <ul className="flex flex-row space-x-2">{isLoggedIn ? <LogOut cookies={props.cookies} /> : <SignInAndRegister />}</ul>
+        <ul className="flex flex-row space-x-2">
+          <li>
+            <div className="block my-3 mx-4 h-4 w-4 rounded-lg bg-green-500 drop-shadow-md"></div>
+          </li>
+          {isLoggedIn ? <LogOut cookies={props.cookies} /> : <SignInAndRegister />}
+        </ul>
       </div>
     </nav>
   );
