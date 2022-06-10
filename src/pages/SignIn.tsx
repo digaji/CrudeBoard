@@ -52,6 +52,12 @@ class SignIn extends React.Component<{ cookies: Cookies }, { email: string; pass
         errorContent: <p className="mt-5 text-center text-2xl font-medium text-red-500">{error.response.data}</p>,
       });
     }
+
+    // Reset state
+    this.setState({
+      email: "",
+      password: ""
+    });
   };
 
   render() {

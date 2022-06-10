@@ -37,27 +37,35 @@ export default class Column extends React.Component<{ cookies: Cookies; column: 
   handleSubmit = async (event: { preventDefault: () => void }) => {
     event.preventDefault();
 
-    const axiosApp = axios.create({
-      baseURL: backendUrl,
-      withCredentials: true,
-      headers: {
-        sessionid: this.props.cookies.get("sessionId"),
-      },
-    });
+    // Only update if the newTask is not empty
+    if (this.state.newTask !== "") {
+      const axiosApp = axios.create({
+        baseURL: backendUrl,
+        withCredentials: true,
+        headers: {
+          sessionid: this.props.cookies.get("sessionId"),
+        },
+      });
 
-    // Add task to tasks database
-    const res = await axiosApp.post("/task", { content: this.state.newTask });
-    console.log(res);
+      // Add task to tasks database
+      const res = await axiosApp.post("/task", { content: this.state.newTask });
+      console.log(res);
 
-    // Add task to column
-    const res_column = await axiosApp.post(`/column/${this.props.column.id}/task/${res.data}`);
-    console.log(res_column);
+      // Add task to column
+      const res_column = await axiosApp.post(`/column/${this.props.column.id}/task/${res.data}`);
+      console.log(res_column);
 
-    // Reset all input
-    Array.from(document.querySelectorAll("input")).forEach((input) => (input.value = ""));
+      // Reset all input
+      Array.from(document.querySelectorAll("input")).forEach((input) => (input.value = ""));
 
-    // Update the board
-    this.props.func();
+      // Update the board
+      this.props.func();
+
+      // Reset state
+      this.setState({
+        newTask: "",
+      });
+    }
   };
 
   render() {
@@ -93,7 +101,7 @@ export default class Column extends React.Component<{ cookies: Cookies; column: 
             id="newTask"
             onChange={this.handleChange}
           />
-          <button type="submit" className="mx-2 mb-2 w-1/4 rounded border-0 bg-sky-500 py-2 px-4 text-white hover:bg-sky-400 active:bg-sky-600">
+          <button type="submit" className="mx-2 mb-2 w-1/4 rounded shadow-xl border-0 bg-sky-500 py-2 px-4 text-white hover:bg-sky-400 active:bg-sky-600">
             + Add Card
           </button>
         </form>
