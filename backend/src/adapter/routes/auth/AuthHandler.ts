@@ -13,7 +13,7 @@ export class AuthHandler {
         if (error) return res.status(400).send(error.details[0].message);
         
         // checking if the user exists
-        const {email, password, organization} = req.body;
+        const {email, password} = req.body;
         const userExists = await UserService.userExistsByEmail(email);
         // const snapshot = await usersRef.where("username", "==", req.body.username).get();
         if (userExists) return res.status(400).send("User already exists");
@@ -21,8 +21,30 @@ export class AuthHandler {
         const employee = new User();
         employee.email = email;
         employee.password = password;
-        employee.organization = organization;
+        employee.organization = email.slice(email.search("@") + 1);
         const userId = await UserService.createEmployee(employee);
+
+        // create and grant a token when the user logs in
+        return res.status(200).send({userId: userId});
+    }
+
+    static async registerAdmin(req: Request, res: Response, next: NextFunction) {
+        
+        // validating the request body
+        const { error } = registerValidation(req.body);
+        if (error) return res.status(400).send(error.details[0].message);
+        
+        // checking if the user exists
+        const {email, password} = req.body;
+        const userExists = await UserService.userExistsByEmail(email);
+        // const snapshot = await usersRef.where("username", "==", req.body.username).get();
+        if (userExists) return res.status(400).send("User already exists");
+        
+        const admin = new User();
+        admin.email = email;
+        admin.password = password;
+        admin.organization = email.slice(email.search("@") + 1);
+        const userId = await UserService.createAdmin(admin);
 
         // create and grant a token when the user logs in
         return res.status(200).send({userId: userId});
@@ -66,7 +88,6 @@ export class AuthHandler {
         try {
             const {sessionid} = req.headers;
             if (sessionid) {
-                console.log(sessionid);
                 // @ts-ignore
                 SessionService.removeSession(sessionid);
                 return res.status(200).send("User has signed out");
@@ -99,5 +120,6 @@ export class AuthHandler {
 
 export const AuthRouter = Router();
 AuthRouter.post("/register", AuthHandler.register);
+AuthRouter.post("/register-admin", AuthHandler.registerAdmin);
 AuthRouter.post("/login", AuthHandler.login);
 AuthRouter.post("/signout", AuthHandler.signout);

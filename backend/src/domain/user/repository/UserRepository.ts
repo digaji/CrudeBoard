@@ -40,6 +40,7 @@ export class UserRepository {
         userSnapshot.forEach(doc => {
             res.push(this.docToUser(doc));
         });
+        return res;
     }
 
     static async findEmployeeByOrganization(organization: string) {
