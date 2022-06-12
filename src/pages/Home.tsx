@@ -2,7 +2,7 @@ import { Cookies } from "react-cookie";
 import logo from "../assets/crudeboard-logo.svg";
 import kanban from "../assets/crudeboard-kanban.webp";
 import indicator from "../assets/crudeboard-indicator.webp";
-import placeholder from "../assets/crudeboard-placeholder.webp";
+import admin from "../assets/crudeboard-admin.webp";
 
 function ContentFeature() {
   return (
@@ -19,7 +19,7 @@ function ContentFeature() {
         <h3 className="col-start-1 my-5 text-2xl font-medium">Kanban Board</h3>
         <img src={indicator} alt="Mask Indicator" className="col-start-2 transition-all hover:scale-110" />
         <h3 className="col-start-2 my-5 text-2xl font-medium ">Mask Indicator</h3>
-        <img src={placeholder} alt="Placeholder" className="col-start-3 transition-all hover:scale-105" />
+        <img src={admin} alt="Admin" className="col-start-3 transition-all hover:scale-105" />
         <h3 className="col-start-3 my-5 text-2xl font-medium">Admin Panel</h3>
       </div>
     </>

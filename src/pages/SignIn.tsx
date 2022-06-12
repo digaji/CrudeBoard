@@ -42,6 +42,16 @@ class SignIn extends React.Component<{ cookies: Cookies }, { email: string; pass
       if (res.status === 200) {
         console.log(res);
         this.props.cookies.set("sessionId", res.data.sessionId, { path: "/" });
+        // Check if user is admin
+        const axiosApp = axios.create({
+          baseURL: backendUrl,
+          withCredentials: true,
+          headers: {
+            sessionid: this.props.cookies.get("sessionId"),
+          },
+        })
+        const res_admin = await axiosApp.get("/admin/check");
+        this.props.cookies.set("isAdmin", res_admin.data.isAdmin, { path: "/" });
         console.log(this.props.cookies.get("sessionId"));
         window.location.assign("/"); // Refresh browser and redirect to home page
       }

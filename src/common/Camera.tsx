@@ -32,7 +32,9 @@ const CameraCapture = (props: {cookies: Cookies, setIsMaskOn: Function}) => {
       });
 
       // Send image to nodeflux
-      const node_res = await axiosApp.post("/nodeflux/facemask", {img: res})
+      const node_res = await axiosApp.post("/nodeflux/facemask", {img: res});
+      // Update db with mask data
+      await axiosApp.post("/mask", {isMasked: node_res.data});
       props.cookies.set("maskOn", node_res.data, { path: "/" });
       props.setIsMaskOn(node_res.data);
     }, 5000);
