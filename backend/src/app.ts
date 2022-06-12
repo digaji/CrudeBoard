@@ -10,6 +10,8 @@ import cookieParser from "cookie-parser";
 import { task } from "./adapter/routes/board/TaskHandler";
 import { column } from "./adapter/routes/board/ColumnHandler";
 import { nodeflux } from "./adapter/routes/nodeflux/NodefluxHandler";
+import { mask } from "./adapter/routes/mask/MaskHandler";
+import { admin } from "./adapter/routes/admin/AdminHandler";
 
 export const app = express();
 dotenv.config();
@@ -29,6 +31,8 @@ app.use(`${BASE_PATH}/auth`, AuthRouter);
 app.use(`${BASE_PATH}/board`, board);
 app.use(`${BASE_PATH}/task`, AuthHandler.requireSessionId, task);
 app.use(`${BASE_PATH}/column`, AuthHandler.requireSessionId, column);
+app.use(`${BASE_PATH}/mask`, AuthHandler.requireSessionId, mask);
+app.use(`${BASE_PATH}/admin`, AuthHandler.requireSessionId, admin);
 app.use(`${BASE_PATH}/nodeflux`, nodeflux);
 app.use(`${BASE_PATH}/firebaseAuth`, FirebaseAuthRouter);
 
