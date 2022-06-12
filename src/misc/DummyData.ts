@@ -6,7 +6,7 @@ interface data {
 
 const dummyData: data = {
   tasks: {
-    "task-1": { id: "task-1", content: "" },
+    "task-1": { id: "task-1", content: "Finish the web app" },
     "task-2": { id: "task-2", content: "Organize the excel sheet" },
     "task-3": { id: "task-3", content: "Charge my phone" },
     "task-4": { id: "task-4", content: "Lunch with colleagues" },
@@ -16,19 +16,19 @@ const dummyData: data = {
       id: "column-1",
       title: "To Do",
       colour: "bg-white",
-      taskIds: ["task-1", "task-2", "task-3", "task-4"], // Saves order of tasks in the column
+      taskIds: ["task-1", "task-4"], // Saves order of tasks in the column
     },
     "column-2": {
       id: "column-2",
       title: "In Progress",
       colour: "bg-orange-200",
-      taskIds: [],
+      taskIds: ["task-2",],
     },
     "column-3": {
       id: "column-3",
       title: "Completed",
       colour: "bg-green-200",
-      taskIds: [],
+      taskIds: ["task-3",],
     }
   },
   // Order of the columns that will be presented

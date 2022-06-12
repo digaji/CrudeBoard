@@ -2,6 +2,8 @@ import logo from "../assets/crudeboard-logo.svg";
 import { Cookies } from "react-cookie";
 import axios from "axios";
 import { backendUrl } from "../misc/Constants";
+import { useState } from "react";
+import Camera from "./Camera";
 
 function LogOut(props: { cookies: Cookies }) {
   return (
@@ -57,12 +59,14 @@ function SignInAndRegister() {
 
 export default function Navbar(props: { cookies: Cookies }): JSX.Element {
   const isLoggedIn = props.cookies.get("sessionId");
+  const [isMaskOn, setIsMaskOn] = useState(props.cookies.get("maskOn") === "true");
 
   return (
     <nav className="border-gray-200 bg-transparent px-5 py-3 font-medium">
       <div className="container mx-auto flex flex-wrap items-center justify-between">
         <div className="flex">
           <img src={logo} className="h-10 pr-6" alt="logo" />
+          <Camera cookies={props.cookies} setIsMaskOn={setIsMaskOn}/>
           <ul className="flex flex-row space-x-2">
             <li>
               <a
@@ -78,12 +82,17 @@ export default function Navbar(props: { cookies: Cookies }): JSX.Element {
                 href="/boards"
                 className="block border-0 py-2 px-4 text-gray-300 underline-offset-4 transition-all duration-300 hover:bg-transparent hover:text-white hover:underline"
               >
-                Boards
+                {isLoggedIn ? "Boards" : "Demo Board"}
               </a>
             </li>
           </ul>
         </div>
-        <ul className="flex flex-row space-x-2">{isLoggedIn ? <LogOut cookies={props.cookies} /> : <SignInAndRegister />}</ul>
+        <ul className="flex flex-row space-x-2">
+          <li>
+            <div className={`block my-3 mx-4 h-4 w-4 rounded-lg drop-shadow-md ${isMaskOn ? "bg-green-500" : "bg-red-500"}`}></div>
+          </li>
+          {isLoggedIn ? <LogOut cookies={props.cookies} /> : <SignInAndRegister />}
+        </ul>
       </div>
     </nav>
   );
