@@ -22,7 +22,26 @@ class AdminHandler {
             return res.status(400).send("User not found");
         }
     }
+
+    static async checkAdmin(req: Request, res: Response, next: NextFunction) {
+
+        // @ts-ignore
+        const {userId: adminUserId} = req.userId;
+
+        const admin = await UserRepository.findUser(adminUserId);
+        if (admin) {
+            if (admin.authorization === "admin") {
+                return res.status(200).json({isAdmin: true});
+            } else {
+                return res.status(200).send({isAdmin: false});
+            }
+        } else {
+            return res.status(400).send("User not found");
+        }
+
+    }
 }
 
 export const admin = Router();
 admin.get("/", AdminHandler.fetchTableData);
+admin.get("/check", AdminHandler.checkAdmin);
